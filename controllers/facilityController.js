@@ -3,10 +3,29 @@ import { facilitiesCollection } from "../config/db.js";
 
 export const getAllFacilities = async (req, res) => {
   try {
-    const facilities = await facilitiesCollection.find().toArray();
+    const { search = "", type = "" } = req.query;
+
+    const query = {};
+
+    if (search) {
+      query.name = {
+        $regex: search,
+        $options: "i",
+      };
+    }
+
+    if (type) {
+      query.facility_type = {
+        $in: [type],
+      };
+    }
+
+    const facilities = await facilitiesCollection
+      .find(query)
+      .toArray();
 
     res.status(200).json(facilities);
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({
       message: "Failed to fetch facilities",
     });
