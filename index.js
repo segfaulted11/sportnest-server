@@ -1,3 +1,5 @@
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./lib/auth.js";
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -15,9 +17,11 @@ app.use(
     credentials: true,
   })
 );
+app.use(cookieParser());
+
+app.all("/api/auth/{*any}", toNodeHandler(auth));
 
 app.use(express.json());
-app.use(cookieParser());
 app.use("/api/facilities", facilityRoutes);
 
 app.get("/", (req, res) => {
