@@ -6,12 +6,13 @@ import {
   addFacility,
   updateFacility,
   deleteFacility,
+  getOwnerFacilities,
 } from "../controllers/facilityController.js";
 
 const router = express.Router();
 
 router.get("/", getAllFacilities);
-
+router.get("/owner/:email", getOwnerFacilities);
 router.get("/:id", getFacilityById);
 
 router.post("/", addFacility);

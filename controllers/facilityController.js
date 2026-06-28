@@ -96,3 +96,18 @@ export const deleteFacility = async (req, res) => {
     });
   }
 };
+export const getOwnerFacilities = async (req, res) => {
+  try {
+    const facilities = await facilitiesCollection
+      .find({
+        owner_email: req.params.email,
+      })
+      .toArray();
+
+    res.json(facilities);
+  } catch (err) {
+    res.status(500).json({
+      message: "Failed",
+    });
+  }
+};;
