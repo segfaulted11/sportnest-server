@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./config/db.js";
 import facilityRoutes from "./routes/facilityRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
 
 dotenv.config();
 
@@ -18,11 +19,12 @@ app.use(
   })
 );
 app.use(cookieParser());
-
 app.all("/api/auth/{*any}", toNodeHandler(auth));
 
 app.use(express.json());
+
 app.use("/api/facilities", facilityRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 app.get("/", (req, res) => {
   res.send("SportNest Server is Running 🚀");
