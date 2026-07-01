@@ -1,5 +1,4 @@
-import { toNodeHandler } from "better-auth/node";
-import { auth } from "./lib/auth.js";
+
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -12,14 +11,25 @@ dotenv.config();
 
 const app = express();
 app.set("trust proxy", 1);
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
 app.use(cookieParser());
-app.all("/api/auth/{*any}", toNodeHandler(auth));
+
 
 app.use(express.json());
 
